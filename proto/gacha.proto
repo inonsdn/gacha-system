@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package main;
+
+option go_package = "proto/proto;gacha";
+
+service GachaService {
+  rpc Draw (DrawRequest) returns (DrawResponse);
+  rpc GetGachaInfo (GachaRequest) returns (GachaResponse);
+}
+
+message DrawRequest {
+  string userId = 1;
+  string gachaId = 2;
+  int32 drawAmount = 3;
+}
+
+message DrawItem {
+  string index = 1;
+  string name = 2;
+  string rarity = 3;
+}
+
+message DrawResponse {
+  repeated DrawItem items = 1;
+}
+
+message GachaRequest {
+  string gachaType = 1;
+}
+
+message GacheRarityRemain {
+  string rarity = 1;
+  int32 remaining = 2;
+}
+
+message GachaResponse {
+  string name = 1;
+  repeated GacheRarityRemain rarityInfos = 2;
+  string startDate = 3;
+  string endDate = 4;
+  string ownerUserId = 5;
+}
