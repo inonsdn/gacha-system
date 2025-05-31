@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"local.dev/gacha_service/proto_file/gacha"
+	gacha "github.com/inonsdn/gacha-system/proto/gacha"
 )
 
 type GachaService struct {

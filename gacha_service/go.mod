@@ -1,4 +1,4 @@
-module local.dev/gacha_service
+module github.com/inonsdn/gacha-system/gacha_service
 
 go 1.23.5
 

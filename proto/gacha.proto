@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package main;
 
-option go_package = "proto/proto;gacha";
+option go_package = "github.com/inonsdn/gacha-system/proto/gacha;gachapb";
 
 service GachaService {
   rpc Draw (DrawRequest) returns (DrawResponse);

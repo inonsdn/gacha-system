@@ -4,7 +4,7 @@
 // 	protoc        v5.29.3
 // source: proto/gacha.proto
 
-package gacha
+package gachapb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -387,7 +387,7 @@ const file_proto_gacha_proto_rawDesc = "" +
 	"\vownerUserId\x18\x05 \x01(\tR\vownerUserId2v\n" +
 	"\fGachaService\x12-\n" +
 	"\x04Draw\x12\x11.main.DrawRequest\x1a\x12.main.DrawResponse\x127\n" +
-	"\fGetGachaInfo\x12\x12.main.GachaRequest\x1a\x13.main.GachaResponseB\x13Z\x11proto/proto;gachab\x06proto3"
+	"\fGetGachaInfo\x12\x12.main.GachaRequest\x1a\x13.main.GachaResponseB5Z3github.com/inonsdn/gacha-system/proto/gacha;gachapbb\x06proto3"
 
 var (
 	file_proto_gacha_proto_rawDescOnce sync.Once

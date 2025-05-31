@@ -6,8 +6,8 @@ import (
 
 	"google.golang.org/grpc"
 
-	"local.dev/gacha_service/internal"
-	"local.dev/gacha_service/proto_file/gacha"
+	"github.com/inonsdn/gacha-system/gacha_service/internal"
+	"github.com/inonsdn/gacha-system/proto/gacha"
 )
 
 func run() {

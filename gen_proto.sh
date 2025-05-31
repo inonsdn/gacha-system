@@ -25,11 +25,11 @@ fi
 
 OUTPUT_PATH="${PROTO_PATH}/gofile/${FILENAME}/."
 
-PROTO_OUT="${PROTO_PATH}/gofile/${FILENAME}/proto/proto"
+PROTO_OUT="${PROTO_PATH}/gofile/${FILENAME}/github.com/inonsdn/gacha-system/proto/${FILENAME}"
 
 protoc --go_out=$OUTPUT_PATH --go-grpc_out=$OUTPUT_PATH $1
 
 mv $PROTO_OUT/* $OUTPUT_PATH
-rm -rf $PROTO_PATH/gofile/${FILENAME}/proto
+rm -rf $PROTO_PATH/gofile/${FILENAME}/github.com
 
 echo "Generate go file at ${OUTPUT_PATH}"

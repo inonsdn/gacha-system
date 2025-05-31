@@ -4,7 +4,7 @@
 // - protoc             v5.29.3
 // source: proto/gacha.proto
 
-package gacha
+package gachapb
 
 import (
 	context "context"
