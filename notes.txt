@@ -1,0 +1,6 @@
+########## Generate go from proto file ##########
+# proto file is config file for use to gRPC protocol
+
+protoc --go_out=<OutputPath> --go-grpc_out=. <inputProtoFile>
+
+
