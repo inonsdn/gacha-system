@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/inonsdn/gacha-system/gacha_service/internal"
-	"github.com/inonsdn/gacha-system/proto/gacha"
+	gachapb "github.com/inonsdn/gacha-system/gacha_service/proto_file/gacha"
 )
 
 func run() {
@@ -18,7 +18,7 @@ func run() {
 
 	server := grpc.NewServer()
 
-	gacha.RegisterGachaServiceServer(server, internal.GachaService{})
+	gachapb.RegisterGachaServiceServer(server, internal.GachaService{})
 
 	err = server.Serve(lis)
 

@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	gacha "github.com/inonsdn/gacha-system/proto/gacha"
+	gachapb "github.com/inonsdn/gacha-system/gacha_service/proto_file/gacha"
 )
 
 type GachaService struct {
-	gacha.UnimplementedGachaServiceServer
+	gachapb.UnimplementedGachaServiceServer
 }
 
 type GachaItem struct {
@@ -22,15 +22,15 @@ type GacheCategInfo struct {
 	rarityToRemaining map[string]int
 }
 
-func buildDrawResponse(gachaItem GachaItem) *gacha.DrawResponse {
-	return &gacha.DrawResponse{
+func buildDrawResponse(gachaItem GachaItem) *gachapb.DrawResponse {
+	return &gachapb.DrawResponse{
 		ItemName: gachaItem.name,
 		Rarity:   gachaItem.rarity,
 	}
 }
 
-func buildGachaResponse(gacheCategInfo GacheCategInfo) *gacha.GachaResponse {
-	return &gacha.GachaResponse{
+func buildGachaResponse(gacheCategInfo GacheCategInfo) *gachapb.GachaResponse {
+	return &gachapb.GachaResponse{
 		GachaCateg:  gacheCategInfo.name,
 		Remaining:   "0",
 		StartDate:   "20250501",
@@ -39,7 +39,7 @@ func buildGachaResponse(gacheCategInfo GacheCategInfo) *gacha.GachaResponse {
 	}
 }
 
-func (g GachaService) Draw(c context.Context, drawRequest *gacha.DrawRequest) (*gacha.DrawResponse, error) {
+func (g GachaService) Draw(c context.Context, drawRequest *gachapb.DrawRequest) (*gachapb.DrawResponse, error) {
 	// TODO: implement logic to draw gacha
 	var err error
 
@@ -58,7 +58,7 @@ func (g GachaService) Draw(c context.Context, drawRequest *gacha.DrawRequest) (*
 	return drawResponse, err
 }
 
-func (g GachaService) GetGachaInfo(c context.Context, gachaRequest *gacha.GachaRequest) (*gacha.GachaResponse, error) {
+func (g GachaService) GetGachaInfo(c context.Context, gachaRequest *gachapb.GachaRequest) (*gachapb.GachaResponse, error) {
 	var err error
 	fmt.Println("GetGachaInfo called", gachaRequest)
 	// query gacha info from db
