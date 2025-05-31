@@ -23,16 +23,27 @@ type GacheCategInfo struct {
 }
 
 func buildDrawResponse(gachaItem GachaItem) *gachapb.DrawResponse {
+
 	return &gachapb.DrawResponse{
-		ItemName: gachaItem.name,
-		Rarity:   gachaItem.rarity,
+		Items: []*gachapb.DrawItem{
+			{
+				Index:  "0",
+				Name:   "TestNo0",
+				Rarity: "R",
+			},
+		},
 	}
 }
 
 func buildGachaResponse(gacheCategInfo GacheCategInfo) *gachapb.GachaResponse {
 	return &gachapb.GachaResponse{
-		GachaCateg:  gacheCategInfo.name,
-		Remaining:   "0",
+		Name: gacheCategInfo.name,
+		RarityInfos: []*gachapb.GacheRarityRemain{
+			{
+				Rarity:    "SR",
+				Remaining: 9999,
+			},
+		},
 		StartDate:   "20250501",
 		EndDate:     "20300501",
 		OwnerUserId: "1",
