@@ -4,14 +4,17 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/inonsdn/gacha-system/gacha_service/internal/dbhandler"
 	gachapb "github.com/inonsdn/gacha-system/proto/gacha"
 )
 
 type GachaService struct {
+	DBHandler *dbhandler.DBHandler
 	gachapb.UnimplementedGachaServiceServer
 }
 
 type GachaItem struct {
+	index  int
 	name   string
 	rarity string
 	categ  string
@@ -22,16 +25,19 @@ type GacheCategInfo struct {
 	rarityToRemaining map[string]int
 }
 
-func buildDrawResponse(gachaItem GachaItem) *gachapb.DrawResponse {
+func buildDrawResponse(gachaItems []GachaItem) *gachapb.DrawResponse {
+	var res []*gachapb.DrawItem
+
+	for _, item := range gachaItems {
+		res = append(res, &gachapb.DrawItem{
+			Index:  fmt.Sprintf("%d", item.index),
+			Name:   item.name,
+			Rarity: item.rarity,
+		})
+	}
 
 	return &gachapb.DrawResponse{
-		Items: []*gachapb.DrawItem{
-			{
-				Index:  "0",
-				Name:   "TestNo0",
-				Rarity: "R",
-			},
-		},
+		Items: res,
 	}
 }
 
@@ -55,15 +61,11 @@ func (g GachaService) Draw(c context.Context, drawRequest *gachapb.DrawRequest) 
 	var err error
 
 	fmt.Println("Draw called", drawRequest)
-	// Mocking result of draw, which is gacha item
-	gachaItem := GachaItem{
-		name:   "Test_0000",
-		rarity: "SSR",
-		categ:  "TestNo0",
-	}
+
+	gachaItems := normalDraw(g.DBHandler, "user00001", "a00001", 10)
 
 	// construct gacha response
-	drawResponse := buildDrawResponse(gachaItem)
+	drawResponse := buildDrawResponse(gachaItems)
 	fmt.Println("Draw res", drawResponse)
 
 	return drawResponse, err
