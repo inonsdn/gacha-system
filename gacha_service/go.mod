@@ -32,4 +32,8 @@ require (
 	google.golang.org/grpc v1.72.2 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+
+	github.com/inonsdn/gacha-system/proto/gacha v0.0.0
 )
+
+// replace github.com/inonsdn/gacha-system/proto/gacha => ../proto/gacha

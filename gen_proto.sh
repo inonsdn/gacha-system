@@ -19,17 +19,17 @@ FILENAME="$(basename "$PROTO_FILE" .proto)"
 CURRENT_DIR="."
 PROTO_PATH="${CURRENT_DIR}/proto"
 
-if [ ! -d "$PROTO_PATH/gofile/${FILENAME}" ]; then
-    mkdir $PROTO_PATH/gofile/${FILENAME}
+if [ ! -d "$PROTO_PATH/${FILENAME}" ]; then
+    mkdir $PROTO_PATH/${FILENAME}
 fi
 
-OUTPUT_PATH="${PROTO_PATH}/gofile/${FILENAME}/."
+OUTPUT_PATH="${PROTO_PATH}/${FILENAME}/."
 
-PROTO_OUT="${PROTO_PATH}/gofile/${FILENAME}/github.com/inonsdn/gacha-system/proto/${FILENAME}"
+PROTO_OUT="${PROTO_PATH}/${FILENAME}/github.com/inonsdn/gacha-system/proto/${FILENAME}"
 
 protoc --go_out=$OUTPUT_PATH --go-grpc_out=$OUTPUT_PATH $1
 
 mv $PROTO_OUT/* $OUTPUT_PATH
-rm -rf $PROTO_PATH/gofile/${FILENAME}/github.com
+rm -rf $PROTO_PATH/${FILENAME}/github.com
 
 echo "Generate go file at ${OUTPUT_PATH}"
