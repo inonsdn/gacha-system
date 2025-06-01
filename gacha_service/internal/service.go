@@ -57,16 +57,12 @@ func buildGachaResponse(gacheCategInfo GacheCategInfo) *gachapb.GachaResponse {
 }
 
 func (g GachaService) Draw(c context.Context, drawRequest *gachapb.DrawRequest) (*gachapb.DrawResponse, error) {
-	// TODO: implement logic to draw gacha
+
 	var err error
-
-	fmt.Println("Draw called", drawRequest)
-
 	gachaItems := normalDraw(g.DBHandler, drawRequest.UserId, drawRequest.GachaId, drawRequest.DrawAmount)
 
 	// construct gacha response
 	drawResponse := buildDrawResponse(gachaItems)
-	fmt.Println("Draw res", drawResponse)
 
 	return drawResponse, err
 }

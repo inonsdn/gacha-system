@@ -30,6 +30,12 @@ func normalDraw(dbHandler *dbhandler.DBHandler, userId string, gachaId string, d
 
 		// random num
 		allItemsNum := rarityToRemaining[constants.CommonRarity] + rarityToRemaining[constants.RareRarity] + rarityToRemaining[constants.SuperRareRarity] + rarityToRemaining[constants.LegendRarity]
+
+		// break loop and return if items is running out
+		if allItemsNum == 0 {
+			break
+		}
+
 		randomNum := rand.Intn(allItemsNum)
 
 		// categorize random num to be rarity of item
