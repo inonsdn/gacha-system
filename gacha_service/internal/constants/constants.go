@@ -1,11 +1,11 @@
 package constants
 
 const (
-	CommonRarity    = "C"
-	RareRarity      = "R"
-	SuperRareRarity = "SR"
-	LegendRarity    = "SSR"
+	CommonRarity    string = "C"
+	RareRarity      string = "R"
+	SuperRareRarity string = "SR"
+	LegendRarity    string = "SSR"
 
-	SoftPityAmount      = 70
-	GarunteeLimitAmount = 90
+	SoftPityAmount      int = 70
+	GarunteeLimitAmount int = 90
 )

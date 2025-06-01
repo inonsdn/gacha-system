@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	"local.dev/api_gateway/config"
-	"local.dev/api_gateway/internal/client"
-	"local.dev/api_gateway/internal/middleware"
-	"local.dev/api_gateway/servicemanager"
+	"github.com/inonsdn/gacha-system/api_gateway/config"
+	"github.com/inonsdn/gacha-system/api_gateway/internal/client"
+	"github.com/inonsdn/gacha-system/api_gateway/internal/middleware"
+	"github.com/inonsdn/gacha-system/api_gateway/servicemanager"
 )
 
 func initRoute(sm *servicemanager.ServiceManager) {

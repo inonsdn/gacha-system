@@ -4,13 +4,13 @@ import (
 	"context"
 	"fmt"
 
+	gachapb "github.com/inonsdn/gacha-system/proto/gacha"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"local.dev/api_gateway/proto_file/gacha"
 )
 
 type GachaServiceClient struct {
-	client gacha.GachaServiceClient
+	client gachapb.GachaServiceClient
 }
 
 func NewGachaServiceClient() *GachaServiceClient {
@@ -22,7 +22,7 @@ func NewGachaServiceClient() *GachaServiceClient {
 		fmt.Println(fmt.Sprintf("Could not connect to GachaService: %v", err))
 	}
 
-	client := gacha.NewGachaServiceClient(conn)
+	client := gachapb.NewGachaServiceClient(conn)
 	return &GachaServiceClient{client: client}
 }
 
@@ -30,13 +30,17 @@ func (c *GachaServiceClient) GetServiceName() string {
 	return "Gacha"
 }
 
-func (c *GachaServiceClient) Draw(userID string) (*gacha.DrawResponse, error) {
-	req := &gacha.DrawRequest{UserId: userID}
+func (c *GachaServiceClient) Draw(userID string, gachaId string, amount int32) (*gachapb.DrawResponse, error) {
+	req := &gachapb.DrawRequest{
+		UserId:     userID,
+		GachaId:    gachaId,
+		DrawAmount: amount,
+	}
 	return c.client.Draw(context.Background(), req)
 }
 
-func (c *GachaServiceClient) GetGachaInfo(userId string, gachaType string) (*gacha.GachaResponse, error) {
-	req := &gacha.GachaRequest{GachaType: gachaType}
+func (c *GachaServiceClient) GetGachaInfo(userId string, gachaType string) (*gachapb.GachaResponse, error) {
+	req := &gachapb.GachaRequest{GachaType: gachaType}
 	fmt.Println("GetGachaInfo")
 	return c.client.GetGachaInfo(context.Background(), req)
 }

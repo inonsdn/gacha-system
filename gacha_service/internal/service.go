@@ -62,7 +62,7 @@ func (g GachaService) Draw(c context.Context, drawRequest *gachapb.DrawRequest) 
 
 	fmt.Println("Draw called", drawRequest)
 
-	gachaItems := normalDraw(g.DBHandler, "user00001", "a00001", 10)
+	gachaItems := normalDraw(g.DBHandler, drawRequest.UserId, drawRequest.GachaId, drawRequest.DrawAmount)
 
 	// construct gacha response
 	drawResponse := buildDrawResponse(gachaItems)

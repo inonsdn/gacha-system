@@ -1,8 +1,11 @@
-module local.dev/api_gateway
+module github.com/inonsdn/gacha-system/api_gateway
 
 go 1.23.5
 
 require github.com/gin-gonic/gin v1.10.1
+
+require github.com/inonsdn/gacha-system/proto v0.0.0
+replace github.com/inonsdn/gacha-system/proto => ../proto
 
 require (
 	github.com/bytedance/sonic v1.13.2 // indirect

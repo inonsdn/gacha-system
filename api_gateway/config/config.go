@@ -1,8 +1,8 @@
 package config
 
 import (
-	"local.dev/api_gateway/internal/client"
-	"local.dev/api_gateway/servicemanager"
+	"github.com/inonsdn/gacha-system/api_gateway/internal/client"
+	"github.com/inonsdn/gacha-system/api_gateway/servicemanager"
 )
 
 var routerConfig = []servicemanager.RouterInfo{
@@ -36,7 +36,7 @@ func GetGachaRouter(client client.GachaServiceClient) []servicemanager.RouterInf
 		},
 		{
 			Method:      "GET",
-			Path:        "/draw",
+			Path:        "/draw/:gachaId",
 			HandlerFunc: servicemanager.GachaDraw(client),
 		},
 	}

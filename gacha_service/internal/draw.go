@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 
@@ -8,38 +9,42 @@ import (
 	"github.com/inonsdn/gacha-system/gacha_service/internal/dbhandler"
 )
 
-func generatePossibleList(rareAmount int, superRareAmount int, LegendAmount int) []string {
-	var possibleList []string
-	for i := 0; i < rareAmount; i++ {
-		possibleList = append(possibleList, constants.RareRarity)
-	}
-
-	for i := 0; i < superRareAmount; i++ {
-		possibleList = append(possibleList, constants.SuperRareRarity)
-	}
-
-	for i := 0; i < LegendAmount; i++ {
-		possibleList = append(possibleList, constants.LegendRarity)
-	}
-
-	return possibleList
-}
-
 func computeProability() {
 
 }
 
-func normalDraw(dbHandler *dbhandler.DBHandler, userId string, gachaId string, drawAmount int) []GachaItem {
+func normalDraw(dbHandler *dbhandler.DBHandler, userId string, gachaId string, drawAmount int32) []GachaItem {
 
 	var items []GachaItem
 
-	rarityToRemaining := dbHandler.GetGachaRemaining("test01")
-	possibleList := generatePossibleList(rarityToRemaining[constants.RareRarity], rarityToRemaining[constants.SuperRareRarity], rarityToRemaining[constants.LegendRarity])
+	rarityToRemaining := dbHandler.GetGachaRemaining(gachaId)
 
+	if len(rarityToRemaining) == 0 {
+		fmt.Println("Not found gacha id: ", gachaId)
+		return items
+	}
+
+	var randomRarity string
 	rand.NewSource(time.Now().UnixNano())
-	for index := range drawAmount {
-		randomNum := rand.Intn(len(possibleList))
-		randomRarity := possibleList[randomNum]
+	for index := range int(drawAmount) {
+
+		// random num
+		allItemsNum := rarityToRemaining[constants.CommonRarity] + rarityToRemaining[constants.RareRarity] + rarityToRemaining[constants.SuperRareRarity] + rarityToRemaining[constants.LegendRarity]
+		randomNum := rand.Intn(allItemsNum)
+
+		// categorize random num to be rarity of item
+		if randomNum < rarityToRemaining[constants.CommonRarity] {
+			randomRarity = constants.CommonRarity
+		} else if randomNum < rarityToRemaining[constants.CommonRarity]+rarityToRemaining[constants.RareRarity] {
+			randomRarity = constants.RareRarity
+		} else if randomNum < rarityToRemaining[constants.CommonRarity]+rarityToRemaining[constants.RareRarity]+rarityToRemaining[constants.SuperRareRarity] {
+			randomRarity = constants.SuperRareRarity
+		} else {
+			randomRarity = constants.LegendRarity
+		}
+
+		// update remaining item
+		dbHandler.GachaIdToRemaining[gachaId][randomRarity] = dbHandler.GachaIdToRemaining[gachaId][randomRarity] - 1
 
 		items = append(items, GachaItem{
 			index:  index,
@@ -48,6 +53,8 @@ func normalDraw(dbHandler *dbhandler.DBHandler, userId string, gachaId string, d
 			categ:  gachaId,
 		})
 	}
+	rarityToRemaining = dbHandler.GetGachaRemaining(gachaId)
+	fmt.Println("========== rarityToRemaining: ", rarityToRemaining)
 
 	return items
 }

@@ -1,11 +1,13 @@
 package servicemanager
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"local.dev/api_gateway/internal/client"
-	"local.dev/api_gateway/internal/middleware"
+	"github.com/inonsdn/gacha-system/api_gateway/internal/client"
+	"github.com/inonsdn/gacha-system/api_gateway/internal/middleware"
 )
 
 func Ping(c *gin.Context) {
@@ -24,16 +26,29 @@ func GachaDraw(gachaClient client.GachaServiceClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userID := middleware.GetUserIDFromContext(c)
 
+		// get param from request path
+		gachaId := c.Param("gachaId")
+		drawAmount := c.Query("amount")
+
+		if drawAmount == "" {
+			drawAmount = "1"
+		}
+
+		drawAmountInt, err := strconv.Atoi(drawAmount)
+		if err != nil {
+			fmt.Println("Invalid number:", err)
+			return
+		}
+
 		// Call GachaService via gRPC
-		result, err := gachaClient.Draw(userID)
+		result, err := gachaClient.Draw(userID, gachaId, int32(drawAmountInt))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Gacha draw failed"})
 			return
 		}
 
 		c.JSON(http.StatusOK, gin.H{
-			"item":   result.ItemName,
-			"rarity": result.Rarity,
+			"items": result.Items,
 		})
 	}
 }
@@ -53,8 +68,8 @@ func GetGachaInfo(gachaClient client.GachaServiceClient) gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK, gin.H{
-			"gachaCateg":  result.GachaCateg,
-			"remaining":   result.Remaining,
+			"gachaCateg":  result.Name,
+			"remaining":   result.RarityInfos,
 			"startDate":   result.StartDate,
 			"endDate":     result.EndDate,
 			"ownerUserId": result.OwnerUserId,
