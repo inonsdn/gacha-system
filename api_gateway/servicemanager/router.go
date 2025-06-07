@@ -7,9 +7,3 @@ type RouterInfo struct {
 	Path        string
 	HandlerFunc gin.HandlerFunc
 }
-
-type GroupRouterInfo struct {
-	Method      string
-	Path        string
-	HandlerFunc func(c interface{ GetServiceName() })
-}

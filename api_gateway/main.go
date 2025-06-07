@@ -18,6 +18,12 @@ func initRoute(sm *servicemanager.ServiceManager) {
 		sm.SetRoute(routeInfo)
 	}
 
+	userClientService := client.NewUserServiceClient()
+	userRouteConfigs := config.GetUserRouter(*userClientService)
+	for _, routeInfo := range userRouteConfigs {
+		sm.SetRoute(routeInfo)
+	}
+
 	gachaClientService := client.NewGachaServiceClient()
 	// init gacha route
 	gachaRouteConfigs := config.GetGachaRouter(*gachaClientService)

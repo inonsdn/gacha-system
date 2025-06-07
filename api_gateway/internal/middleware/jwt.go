@@ -1,33 +1,59 @@
 package middleware
 
 import (
+	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
+
+var jwtSecret = []byte("ebcc8244-5629-4633-bbdd-f5f2253a13bd") // 🔐 Use env var in real apps
 
 // AuthJWT - Middleware to check JWT token
 func AuthJWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Get token from Authorization header
-		// token := c.GetHeader("Authorization")
-		// if token == "" {
-		// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "Token required"})
-		// 	c.Abort()
-		// 	return
+		// read authroize header
+		authHeader := c.GetHeader("Authorization")
+
+		fmt.Println("[Authorization] has request")
+
+		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "missing or invalid Authorization header"})
+			return
+		}
+
+		// extract only token from header
+		tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
+
+		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+			return jwtSecret, nil
+		}, jwt.WithValidMethods([]string{"HS256"}))
+
+		if err != nil || !token.Valid {
+			fmt.Println("[Authorization] Invalid token")
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
+			return
+		}
+
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok || claims["user_id"] == nil {
+			fmt.Println("[Authorization] Cannot get user id")
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid claims"})
+			return
+		}
+
+		// expirationTime, err := token.Claims.GetExpirationTime()
+		// if expirationTime.Before(time.Now()) {
+		// 	c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Token expire, login again"})
 		// }
 
-		// // Validate token (for simplicity, we assume it's always valid here)
-		// if !validateToken(token) {
-		// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
-		// 	c.Abort()
-		// 	return
-		// }
+		userID := claims["user_id"].(string)
+		c.Set("userID", userID) // ✅ Save for handler
 
-		// Assuming the token contains the userID, we set it on the context
-		c.Set("userID", "12345") // For example, this should be extracted from the JWT
+		fmt.Println("[Authorization] Authorized. User: ", userID)
 
-		// Proceed to the next handler
 		c.Next()
 	}
 }

@@ -8,23 +8,28 @@ import (
 var routerConfig = []servicemanager.RouterInfo{
 	{
 		Method:      "GET",
-		Path:        "/",
-		HandlerFunc: servicemanager.Login,
-	},
-	{
-		Method:      "GET",
 		Path:        "/ping",
 		HandlerFunc: servicemanager.Ping,
-	},
-	{
-		Method:      "POST",
-		Path:        "/login",
-		HandlerFunc: servicemanager.Login,
 	},
 }
 
 func GetRouterConfig() []servicemanager.RouterInfo {
 	return routerConfig
+}
+
+func GetUserRouter(client client.UserServiceClient) []servicemanager.RouterInfo {
+	return []servicemanager.RouterInfo{
+		{
+			Method:      "POST",
+			Path:        "/login",
+			HandlerFunc: servicemanager.Login(client),
+		},
+		{
+			Method:      "POST",
+			Path:        "/register",
+			HandlerFunc: servicemanager.Register(client),
+		},
+	}
 }
 
 func GetGachaRouter(client client.GachaServiceClient) []servicemanager.RouterInfo {
@@ -35,8 +40,8 @@ func GetGachaRouter(client client.GachaServiceClient) []servicemanager.RouterInf
 			HandlerFunc: servicemanager.GetGachaInfo(client),
 		},
 		{
-			Method:      "GET",
-			Path:        "/draw/:gachaId",
+			Method:      "POST",
+			Path:        "/draw",
 			HandlerFunc: servicemanager.GachaDraw(client),
 		},
 	}

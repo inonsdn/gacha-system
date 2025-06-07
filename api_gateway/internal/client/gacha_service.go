@@ -26,16 +26,13 @@ func NewGachaServiceClient() *GachaServiceClient {
 	return &GachaServiceClient{client: client}
 }
 
-func (c *GachaServiceClient) GetServiceName() string {
-	return "Gacha"
-}
-
 func (c *GachaServiceClient) Draw(userID string, gachaId string, amount int32) (*gachapb.DrawResponse, error) {
 	req := &gachapb.DrawRequest{
 		UserId:     userID,
 		GachaId:    gachaId,
 		DrawAmount: amount,
 	}
+	fmt.Println("GetGachaInfo", req)
 	return c.client.Draw(context.Background(), req)
 }
 

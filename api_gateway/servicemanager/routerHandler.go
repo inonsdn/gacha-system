@@ -3,7 +3,6 @@ package servicemanager
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/inonsdn/gacha-system/api_gateway/internal/client"
@@ -16,32 +15,58 @@ func Ping(c *gin.Context) {
 	})
 }
 
-func Login(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Redirect to login",
-	})
+func Login(userClient client.UserServiceClient) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		fmt.Println("API GOT LOGIN")
+		loginName, _ := c.Params.Get("loginName")
+		passwd, _ := c.Params.Get("passwd")
+		// call function to user service via grpc
+		userLoginResponse, err := userClient.Login(loginName, passwd)
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": "Cannot login.",
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"token": userLoginResponse.JwtToken,
+			})
+		}
+
+	}
+}
+
+func Register(userClient client.UserServiceClient) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		// call function to user service via grpc
+		userClient.Register("", "")
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Done",
+		})
+	}
+}
+
+type DrawRequestBody struct {
+	GachaId string `json:"gachaId"`
+	Amount  int32  `json:"amount"`
 }
 
 func GachaDraw(gachaClient client.GachaServiceClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		fmt.Println("GACHADRAW: called")
 		userID := middleware.GetUserIDFromContext(c)
 
-		// get param from request path
-		gachaId := c.Param("gachaId")
-		drawAmount := c.Query("amount")
-
-		if drawAmount == "" {
-			drawAmount = "1"
-		}
-
-		drawAmountInt, err := strconv.Atoi(drawAmount)
-		if err != nil {
-			fmt.Println("Invalid number:", err)
+		// Parse payload to body request object
+		var body DrawRequestBody
+		if err := c.BindJSON(&body); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON payload"})
 			return
 		}
 
 		// Call GachaService via gRPC
-		result, err := gachaClient.Draw(userID, gachaId, int32(drawAmountInt))
+		result, err := gachaClient.Draw(userID, body.GachaId, body.Amount)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Gacha draw failed"})
 			return
